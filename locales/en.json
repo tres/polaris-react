@@ -1,7 +1,12 @@
 {
   "Polaris": {
-    "Actions": {
-      "moreActions": "More actions"
+    "ActionMenu": {
+      "Actions": {
+        "moreActions": "More actions"
+      },
+      "RollupActions": {
+        "rollupButton": "View actions"
+      }
     },
     "Avatar": {
       "label": "Avatar",
@@ -128,11 +133,6 @@
       "navigationLabel": "Navigation",
       "Navigation": {
         "closeMobileNavigationLabel": "Close navigation"
-      }
-    },
-    "ActionMenu": {
-      "RollupActions": {
-        "rollupButton": "Actions"
       }
     },
     "Filters": {

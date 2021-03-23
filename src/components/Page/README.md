@@ -169,6 +169,7 @@ Use for detail pages, which should have pagination and breadcrumbs, and also oft
       ],
     },
   ]}
+  rollupActionsLabelOverride="View product actions"
   pagination={{
     hasPrevious: true,
     hasNext: true,

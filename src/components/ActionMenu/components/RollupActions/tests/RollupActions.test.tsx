@@ -1,7 +1,7 @@
 import React from 'react';
 import {HorizontalDotsMinor} from '@shopify/polaris-icons';
 import {mountWithApp} from 'tests/utilities';
-import {Button, Popover} from 'components';
+import {Button, Popover, Tooltip} from 'components';
 
 // eslint-disable-next-line @shopify/strict-component-boundaries
 import {
@@ -12,6 +12,7 @@ import {RollupActions} from '../RollupActions';
 
 describe('<RollupActions />', () => {
   const mockProps = {
+    accessibilityLabelOverride: undefined,
     items: undefined,
     sections: undefined,
   };
@@ -33,6 +34,26 @@ describe('<RollupActions />', () => {
         url: 'https://www.shopify.ca',
       },
     ];
+
+    it('renders a Tooltip with the default accessibility label', () => {
+      const wrapper = mountWithApp(
+        <RollupActions {...mockProps} items={mockItems} />,
+      );
+
+      expect(wrapper).toContainReactComponent(Tooltip, {
+        content: 'View actions',
+      });
+    });
+
+    it('renders a Button with the default accessibility label', () => {
+      const wrapper = mountWithApp(
+        <RollupActions {...mockProps} items={mockItems} />,
+      );
+
+      expect(wrapper).toContainReactComponent(Button, {
+        accessibilityLabel: 'View actions',
+      });
+    });
 
     it('gets rendered as ActionList > Item', () => {
       const wrapper = mountWithApp(
@@ -62,6 +83,38 @@ describe('<RollupActions />', () => {
       popoverComponent = wrapper.find(Popover);
       expect(popoverComponent!).toHaveReactProps({
         active: false,
+      });
+    });
+
+    describe('accessibilityLabelOverride', () => {
+      it('renders a Tooltip with the accessibilityLabelOverride', () => {
+        const accessibilityLabelOverride = 'View test actions';
+        const wrapper = mountWithApp(
+          <RollupActions
+            {...mockProps}
+            items={mockItems}
+            accessibilityLabelOverride={accessibilityLabelOverride}
+          />,
+        );
+
+        expect(wrapper).toContainReactComponent(Tooltip, {
+          content: accessibilityLabelOverride,
+        });
+      });
+
+      it('renders a Button with the accessibilityLabelOverride', () => {
+        const accessibilityLabelOverride = 'View test actions';
+        const wrapper = mountWithApp(
+          <RollupActions
+            {...mockProps}
+            items={mockItems}
+            accessibilityLabelOverride={accessibilityLabelOverride}
+          />,
+        );
+
+        expect(wrapper).toContainReactComponent(Button, {
+          accessibilityLabel: accessibilityLabelOverride,
+        });
       });
     });
   });

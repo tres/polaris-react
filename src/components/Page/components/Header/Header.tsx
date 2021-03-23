@@ -47,6 +47,8 @@ export interface HeaderProps extends TitleProps {
   secondaryActions?: MenuActionDescriptor[];
   /** Collection of page-level groups of secondary actions */
   actionGroups?: MenuGroupDescriptor[];
+  /** Override label for rolled up actions activator */
+  rollupActionsLabelOverride?: string;
   /** Additional navigation markup */
   additionalNavigation?: React.ReactNode;
   // Additional meta data
@@ -77,6 +79,7 @@ export function Header({
   secondaryActions = [],
   actionGroups = [],
   compactTitle = false,
+  rollupActionsLabelOverride,
 }: HeaderProps) {
   const {isNavigationCollapsed} = useMediaQuery();
   const isSingleRow =
@@ -136,6 +139,7 @@ export function Header({
         actions={secondaryActions}
         groups={actionGroups}
         rollup={isNavigationCollapsed}
+        rollupActionsLabelOverride={rollupActionsLabelOverride}
       />
     ) : null;
 
