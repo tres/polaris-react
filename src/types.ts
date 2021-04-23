@@ -151,6 +151,8 @@ export interface ActionListItemDescriptor
   active?: boolean;
   /** Defines a role for the action */
   role?: string;
+  /** Temporary prop */
+  nodeContent?: React.ReactNode;
 }
 
 export interface ActionListSection {

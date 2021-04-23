@@ -106,14 +106,33 @@ function ActionListInPopoverExample() {
     </Button>
   );
 
+  const svgTest = (
+    <svg
+      width="140"
+      height="2"
+      viewBox="0 0 140 2"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M3.88889 2H0V0H3.88889V2ZM19.4444 2H11.6667V0H19.4444V2ZM35 2H27.2222V0H35V2ZM50.5556 2H42.7778V0H50.5556V2ZM66.1111 2H58.3333V0H66.1111V2ZM81.6667 2H73.8889V0H81.6667V2ZM97.2222 2H89.4445V0H97.2222V2ZM112.778 2H105V0H112.778V2ZM128.333 2H120.556V0H128.333V2ZM140 2H136.111V0H140V2Z"
+        fill="#5C5F62"
+      />
+    </svg>
+  );
+
   return (
     <div style={{height: '250px'}}>
       <Popover active={active} activator={activator} onClose={toggleActive}>
         <ActionList
           items={[
             {
-              content: 'Import file',
+              active: true,
+              nodeContent: svgTest,
               onAction: handleImportedAction,
+              accessibilityLabel: 'Dashed divider',
             },
             {
               content: 'Export file',

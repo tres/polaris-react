@@ -30,6 +30,7 @@ export function Item({
   ellipsis,
   active,
   role,
+  nodeContent,
 }: ItemProps) {
   const className = classNames(
     styles.Item,
@@ -113,7 +114,7 @@ export function Item({
       onClick={onAction}
       onMouseUp={handleMouseUpByBlurring}
     >
-      {contentElement}
+      {nodeContent ? nodeContent : contentElement}
     </button>
   );
 
