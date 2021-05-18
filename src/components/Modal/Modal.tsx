@@ -6,6 +6,7 @@ import {useUniqueId} from '../../utilities/unique-id/hooks';
 import {useI18n} from '../../utilities/i18n';
 import {WithinContentContext} from '../../utilities/within-content-context';
 import {wrapWithComponent} from '../../utilities/components';
+import {isServer} from '../../utilities/target';
 import {Backdrop} from '../Backdrop';
 import {Scrollable} from '../Scrollable';
 import {Spinner} from '../Spinner';
@@ -55,8 +56,8 @@ export interface ModalProps extends FooterProps {
   onTransitionEnd?(): void;
   /** Callback when the bottom of the modal content is reached */
   onScrolledToBottom?(): void;
-  /** The element or the RefObject that activates the Modal */
-  activator?: React.RefObject<HTMLElement> | React.ReactElement;
+  /** The element, the RefObject or the id that activates the Modal */
+  activator?: React.RefObject<HTMLElement> | React.ReactElement | string;
   /** Removes Scrollable container from the modal content */
   noScroll?: boolean;
 }
@@ -106,12 +107,23 @@ export const Modal: React.FunctionComponent<ModalProps> & {
   const handleExited = useCallback(() => {
     setIframeHeight(IFRAME_LOADING_HEIGHT);
 
-    const activatorElement =
-      activator && isRef(activator)
-        ? activator && activator.current
-        : activatorRef.current;
+    const activatorElement = getActivatorElement();
     if (activatorElement) {
-      requestAnimationFrame(() => focusFirstFocusableNode(activatorElement));
+      requestAnimationFrame(() =>
+        focusFirstFocusableNode(activatorElement, false),
+      );
+    }
+
+    function getActivatorElement() {
+      if (typeof activator === 'string') {
+        return isServer ? null : document.getElementById(activator);
+      }
+
+      if (activator && isRef(activator)) {
+        return activator && activator.current;
+      }
+
+      return activatorRef.current;
     }
   }, [activator]);
 
@@ -206,7 +218,7 @@ export const Modal: React.FunctionComponent<ModalProps> & {
   const animated = !instant;
 
   const activatorMarkup =
-    activator && !isRef(activator) ? (
+    activator && typeof activator !== 'string' && !isRef(activator) ? (
       <div ref={activatorRef}>{activator}</div>
     ) : null;
 
