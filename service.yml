@@ -1,6 +1,7 @@
 classification: tier4
 slack_channels:
   - polaris
+  - polaris-notifications
 url: https://polaris-react.shopifycloud.com
 oncall_url: https://shopify.pagerduty.com/services/PQNFXB1
 security:
