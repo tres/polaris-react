@@ -18,9 +18,18 @@ export interface ProgressBarProps {
    * @default 'medium'
    */
   size?: Size;
+  /**
+   * Whether the fill animation is triggered
+   * @default 'true'
+   */
+  animated?: boolean;
 }
 
-export function ProgressBar({progress = 0, size = 'medium'}: ProgressBarProps) {
+export function ProgressBar({
+  progress = 0,
+  size = 'medium',
+  animated = true,
+}: ProgressBarProps) {
   const i18n = useI18n();
 
   const className = classNames(
@@ -39,7 +48,10 @@ export function ProgressBar({progress = 0, size = 'medium'}: ProgressBarProps) {
   return (
     <div className={className}>
       <progress className={styles.Progress} value={parsedProgress} max="100" />
-      <div className={styles.Indicator} style={{width: `${parsedProgress}%`}}>
+      <div
+        className={classNames(styles.Indicator, animated && styles.Animated)}
+        style={{width: `${parsedProgress}%`}}
+      >
         <span className={styles.Label}>{parsedProgress}%</span>
       </div>
     </div>

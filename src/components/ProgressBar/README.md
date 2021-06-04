@@ -42,6 +42,14 @@ Use the size option when you need to increase or decrease the visual weight of t
 <ProgressBar progress={40} size="small" />
 ```
 
+### Non-animated progress bar
+
+Use the animated prop when you want to show a static progress bar.
+
+```jsx
+<ProgressBar progress={80} animated={false} />
+```
+
 ---
 
 ## Related components
