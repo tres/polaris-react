@@ -1,11 +1,2 @@
-production:
-  classification: tier4
-npm:
-  classification: library
-slack_channels:
-  - polaris
-url: https://polaris-react.shopifycloud.com
-oncall_url: https://shopify.pagerduty.com/services/PQNFXB1
-security:
-  data_management:
-    contains_pii: false
+# https://services.shopify.io/services/polaris-react
+classification: tier4
