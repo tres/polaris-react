@@ -43,6 +43,8 @@ export interface BulkActionsProps {
   selectMode?: boolean;
   /** Actions that will be given more prominence */
   promotedActions?: BulkAction[];
+  /** */
+  primaryActions?: BulkAction[];
   /** List of actions */
   actions?: (BulkAction | BulkActionListSection)[];
   /** Text to select all across pages */
@@ -66,6 +68,7 @@ type CombinedProps = BulkActionsProps & {
 interface State {
   smallScreenPopoverVisible: boolean;
   largeScreenPopoverVisible: boolean;
+  button1PoporverVisible: boolean;
   containerWidth: number;
   measuring: boolean;
 }
@@ -82,6 +85,7 @@ class BulkActionsInner extends PureComponent<CombinedProps, State> {
   state: State = {
     smallScreenPopoverVisible: false,
     largeScreenPopoverVisible: false,
+    button1PoporverVisible: false,
     containerWidth: 0,
     measuring: true,
   };
@@ -98,7 +102,11 @@ class BulkActionsInner extends PureComponent<CombinedProps, State> {
 
   private handleResize = debounce(
     () => {
-      const {smallScreenPopoverVisible, largeScreenPopoverVisible} = this.state;
+      const {
+        smallScreenPopoverVisible,
+        largeScreenPopoverVisible,
+        button1PoporverVisible,
+      } = this.state;
 
       if (this.containerNode) {
         const containerWidth = this.containerNode.getBoundingClientRect().width;
@@ -107,10 +115,15 @@ class BulkActionsInner extends PureComponent<CombinedProps, State> {
         }
       }
 
-      if (smallScreenPopoverVisible || largeScreenPopoverVisible) {
+      if (
+        smallScreenPopoverVisible ||
+        largeScreenPopoverVisible ||
+        button1PoporverVisible
+      ) {
         this.setState({
           smallScreenPopoverVisible: false,
           largeScreenPopoverVisible: false,
+          button1PoporverVisible: false,
         });
       }
     },
@@ -210,6 +223,7 @@ class BulkActionsInner extends PureComponent<CombinedProps, State> {
       smallScreen,
       disabled,
       promotedActions,
+      primaryActions,
       paginatedSelectAllText = null,
       paginatedSelectAllAction,
       i18n,
@@ -229,6 +243,7 @@ class BulkActionsInner extends PureComponent<CombinedProps, State> {
     const {
       smallScreenPopoverVisible,
       largeScreenPopoverVisible,
+      button1PoporverVisible,
       measuring,
     } = this.state;
 
@@ -297,6 +312,30 @@ class BulkActionsInner extends PureComponent<CombinedProps, State> {
         </Popover>
       </div>
     ) : null;
+
+    const primaryActionsPopover =
+      primaryActions && primaryActions.length > 0 ? (
+        <div>
+          <Popover
+            active={button1PoporverVisible}
+            activator={
+              <BulkActionButton
+                disclosure
+                onAction={this.toggleButton1Popover}
+                content="button 1"
+                indicator={this.isNewBadgeInBadgeActions()}
+              />
+            }
+            onClose={this.toggleButton1Popover}
+            preferInputActivator
+          >
+            <ActionList
+              items={primaryActions}
+              onActionAnyItem={this.toggleButton1Popover}
+            />
+          </Popover>
+        </div>
+      ) : null;
 
     const promotedActionsMarkup =
       promotedActions && numberOfPromotedActionsToRender > 0
@@ -419,9 +458,10 @@ class BulkActionsInner extends PureComponent<CombinedProps, State> {
     ) : null;
 
     const largeGroupContent =
-      promotedActionsMarkup || actionsPopover ? (
+      primaryActionsPopover || promotedActionsMarkup || actionsPopover ? (
         <ButtonGroup segmented>
           <CheckableButton {...checkableButtonProps} />
+          {primaryActionsPopover}
           {promotedActionsMarkup}
           {actionsPopover}
         </ButtonGroup>
@@ -512,6 +552,12 @@ class BulkActionsInner extends PureComponent<CombinedProps, State> {
 
     this.setState(({smallScreenPopoverVisible}) => ({
       smallScreenPopoverVisible: !smallScreenPopoverVisible,
+    }));
+  };
+
+  private toggleButton1Popover = () => {
+    this.setState(({button1PoporverVisible}) => ({
+      button1PoporverVisible: !button1PoporverVisible,
     }));
   };
 
