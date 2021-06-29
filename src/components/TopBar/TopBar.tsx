@@ -1,6 +1,7 @@
 import React from 'react';
 import {MobileHamburgerMajor} from '@shopify/polaris-icons';
 
+import {DisplayText} from '../DisplayText';
 import {classNames} from '../../utilities/css';
 import {getWidth} from '../../utilities/get-width';
 import {useI18n} from '../../utilities/i18n';
@@ -37,6 +38,8 @@ export interface TopBarProps {
   onSearchResultsDismiss?: SearchProps['onDismiss'];
   /** A callback function that handles hiding and showing mobile navigation */
   onNavigationToggle?(): void;
+  /** Title string replacing the company logo on the top left if provided */
+  title?: string;
 }
 
 // TypeScript can't generate types that correctly infer the typing of
@@ -59,6 +62,7 @@ export const TopBar: React.FunctionComponent<TopBarProps> & {
   onNavigationToggle,
   onSearchResultsDismiss,
   contextControl,
+  title,
 }: TopBarProps) {
   const i18n = useI18n();
   const {logo} = useTheme();
@@ -94,6 +98,12 @@ export const TopBar: React.FunctionComponent<TopBarProps> & {
     contextMarkup = (
       <div testID="ContextControl" className={styles.ContextControl}>
         {contextControl}
+      </div>
+    );
+  } else if (title) {
+    contextMarkup = (
+      <div className={styles.TitleContainer}>
+        <DisplayText size="small">{title}</DisplayText>
       </div>
     );
   } else if (logo) {

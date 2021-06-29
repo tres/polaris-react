@@ -17,6 +17,7 @@ export interface DialogProps {
   limitHeight?: boolean;
   large?: boolean;
   small?: boolean;
+  full?: boolean;
   onClose(): void;
   onEntered?(): void;
   onExited?(): void;
@@ -32,6 +33,7 @@ export function Dialog({
   onEntered,
   large,
   small,
+  full,
   limitHeight,
   ...props
 }: DialogProps) {
@@ -40,6 +42,7 @@ export function Dialog({
     styles.Modal,
     small && styles.sizeSmall,
     large && styles.sizeLarge,
+    full && styles.sizeFull,
     limitHeight && styles.limitHeight,
   );
   const TransitionChild = instant ? Transition : FadeUp;

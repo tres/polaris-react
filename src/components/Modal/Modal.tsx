@@ -43,6 +43,8 @@ export interface ModalProps extends FooterProps {
   large?: boolean;
   /** Decreases the modal width */
   small?: boolean;
+  /** Makes the modal fullscreen */
+  full?: boolean;
   /** Limits modal height on large sceens with scrolling */
   limitHeight?: boolean;
   /** Replaces modal content with a spinner while a background action is being performed */
@@ -85,6 +87,7 @@ export const Modal: React.FunctionComponent<ModalProps> & {
   onIFrameLoad,
   onTransitionEnd,
   noScroll,
+  full,
 }: ModalProps) {
   const [iframeHeight, setIframeHeight] = useState(IFRAME_LOADING_HEIGHT);
 
@@ -144,9 +147,11 @@ export const Modal: React.FunctionComponent<ModalProps> & {
         </Footer>
       );
 
-    const content = sectioned
-      ? wrapWithComponent(children, Section, {})
-      : children;
+    console.log('sectioned', sectioned);
+    console.log('full', full);
+
+    const content =
+      sectioned && !full ? wrapWithComponent(children, Section, {}) : children;
 
     const body = loading ? (
       <div className={styles.Spinner}>
@@ -190,6 +195,7 @@ export const Modal: React.FunctionComponent<ModalProps> & {
         onExited={handleExited}
         large={large}
         small={small}
+        full={full}
         limitHeight={limitHeight}
       >
         <Header titleHidden={titleHidden} id={headerId} onClose={onClose}>
@@ -211,15 +217,18 @@ export const Modal: React.FunctionComponent<ModalProps> & {
     ) : null;
 
   return (
-    <WithinContentContext.Provider value>
-      {activatorMarkup}
-      <Portal idPrefix="modal">
-        <TransitionGroup appear={animated} enter={animated} exit={animated}>
-          {dialog}
-        </TransitionGroup>
-        {backdrop}
-      </Portal>
-    </WithinContentContext.Provider>
+    <>
+      <WithinContentContext.Provider value>
+        {activatorMarkup}
+        <Portal idPrefix="modal">
+          <TransitionGroup appear={animated} enter={animated} exit={animated}>
+            <div>{sectioned}</div>
+            {dialog}
+          </TransitionGroup>
+          {backdrop}
+        </Portal>
+      </WithinContentContext.Provider>
+    </>
   );
 };
 
