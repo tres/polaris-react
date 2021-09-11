@@ -92,6 +92,7 @@ import {
   Form,
   FormLayout,
   Frame,
+  GradientPicker,
   Heading,
   Icon,
   Image,

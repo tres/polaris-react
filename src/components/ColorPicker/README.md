@@ -84,3 +84,19 @@ function ColorPickerWithTransparentValueExample() {
   return <ColorPicker fullWidth onChange={setColor} color={color} allowAlpha />;
 }
 ```
+
+### Gradient Picker
+
+Use when merchants need gradients
+
+```jsx
+function GradientPickerExample() {
+  const [color, setColor] = useState({
+    hue: 120,
+    brightness: 1,
+    saturation: 1,
+  });
+
+  return <GradientPicker onChange={setColor} color={color} />;
+}
+```

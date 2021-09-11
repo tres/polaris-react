@@ -1,0 +1,58 @@
+@import '../../../../styles/common';
+
+$dragger-size: rem(18px);
+$stacking-order: (
+  color: 10,
+  adjustments: 20,
+  dragger: 30,
+);
+
+.MultiSlidable {
+  height: 100%;
+  width: 100%;
+  cursor: crosshair;
+}
+
+.ColorLayer {
+  position: absolute;
+  z-index: z-index(color, $stacking-order);
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 8rem;
+  overflow: hidden;
+  box-shadow: inset rgba(0, 0, 0, 0.07) 0 0 0 1px,
+    inset rgba(0, 0, 0, 0.15) 0 1px 3px 0;
+}
+
+.Dragger {
+  position: absolute;
+  z-index: z-index(dragger, $stacking-order);
+  bottom: 1.5rem;
+  transform: none;
+  height: $dragger-size;
+  width: $dragger-size;
+  will-change: transform;
+  background: transparent;
+  border: var(--p-border-radius-base) solid var(--p-surface);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.Active {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 23px;
+    left: 4px;
+    display: block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: darkgrey;
+  }
+}
+.Dragging {
+  cursor: grabbing;
+}

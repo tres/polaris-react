@@ -94,6 +94,13 @@ $purple: rgb(255, 0, 255);
 $huepicker-padding: $dragger-size;
 $huepicker-bottom-padding-start: $picker-size - $dragger-size;
 
+.GradientPicker {
+  position: relative;
+  overflow: hidden;
+  height: 10px;
+  width: 100%;
+}
+
 .HuePicker,
 .AlphaPicker {
   position: relative;
@@ -103,6 +110,8 @@ $huepicker-bottom-padding-start: $picker-size - $dragger-size;
   margin-left: spacing(tight);
   border-width: var(--p-border-radius-base);
   border-radius: $picker-size * 0.5;
+  box-shadow: inset rgba(0, 0, 0, 0.07) 0 0 0 1px,
+    inset rgba(0, 0, 0, 0.15) 0 1px 3px 0;
 }
 
 .HuePicker {
@@ -130,6 +139,8 @@ $huepicker-bottom-padding-start: $picker-size - $dragger-size;
   height: 100%;
   width: 100%;
   pointer-events: none;
+  box-shadow: inset rgba(0, 0, 0, 0.07) 0 0 0 1px,
+    inset rgba(0, 0, 0, 0.15) 0 1px 3px 0;
 }
 
 .Slidable {

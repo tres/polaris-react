@@ -1,0 +1,83 @@
+@import '../../styles/common';
+
+.CardWrapper {
+  width: 300px;
+}
+
+.GradientPicker {
+  position: relative;
+  width: 30rem;
+  overflow: hidden;
+}
+
+.AnglePicker {
+  width: 100%;
+}
+
+.Controls {
+  padding: spacing(tight);
+}
+
+.Preview {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 0.8rem 0.8rem 0 0;
+  background: repeating-conic-gradient(
+      var(--p-surface) 0% 25%,
+      var(--p-surface-neutral-subdued) 0% 50%
+    )
+    50% / #{spacing() spacing()};
+  .foreground {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0.8rem 0.8rem 0 0;
+  }
+
+  &:hover {
+    > .circle {
+      opacity: 0.4;
+    }
+  }
+
+  .circle {
+    cursor: pointer;
+    position: relative;
+    top: 9px;
+    z-index: 99;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 1px solid var(--p-surface);
+
+    height: 60px;
+    width: 60px;
+
+    transition: opacity duration(slow) easing();
+    opacity: 0;
+  }
+}
+
+.TypePicker {
+  display: flex;
+  margin-bottom: spacing(tight);
+
+  .buttonGroup {
+    flex: 1;
+  }
+}
+
+.StopPicker {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  margin-bottom: spacing(base);
+}
+
+.ColorPicker {
+  width: 100%;
+}

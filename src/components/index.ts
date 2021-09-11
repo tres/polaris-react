@@ -132,6 +132,8 @@ export {
 } from './Frame';
 export type {FrameProps} from './Frame';
 
+export {GradientPicker} from './GradientPicker';
+
 export {Heading} from './Heading';
 export type {HeadingProps} from './Heading';
 

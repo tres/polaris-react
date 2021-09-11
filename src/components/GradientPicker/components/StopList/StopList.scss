@@ -1,0 +1,65 @@
+@import '../../../../styles/common';
+
+$col1-width: rem(70px);
+$col2-width: rem(110px);
+$col3-width: rem(70px);
+
+.StopList {
+  margin-top: spacing(tight);
+  display: flex;
+  flex-direction: column;
+}
+
+.Captions {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: spacing(extra-tight);
+
+  > div {
+    margin-right: spacing(extra-tight);
+  }
+
+  > .col1 {
+    width: $col1-width;
+  }
+
+  > .col2 {
+    width: $col2-width;
+  }
+
+  > .col3 {
+    width: $col3-width;
+  }
+}
+
+.StopListItem {
+  display: flex;
+  opacity: 0.5;
+
+  &:hover {
+    opacity: 1;
+  }
+  margin-bottom: spacing(tight);
+  > div {
+    margin-right: spacing(extra-tight);
+  }
+  transition: opacity duration() easing();
+}
+
+.Active {
+  opacity: 1;
+}
+
+.StopListHexInput {
+  width: $col2-width;
+}
+
+.StopListPercentInput {
+  width: $col1-width;
+}
+
+.ClearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

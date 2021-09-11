@@ -239,7 +239,7 @@ function getColorType(color: string): ColorType {
   }
 }
 
-function rgbToObject(color: string): RGBAColor {
+export function rgbToObject(color: string): RGBAColor {
   // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
   const colorMatch = color.match(/\(([^)]+)\)/);
 
