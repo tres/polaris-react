@@ -1,0 +1,1 @@
+export {MultiSlidable} from './MultiSlidable';

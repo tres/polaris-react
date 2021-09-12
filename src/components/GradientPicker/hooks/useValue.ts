@@ -196,7 +196,9 @@ function stringifyGradient(
   }
 
   if (type === 'conic') {
-    return `conic-gradient(${stopText})`;
+    const orientationText =
+      linearOrientation == null ? '' : `from ${linearOrientation.value}deg, `;
+    return `conic-gradient(${orientationText}${stopText})`;
   }
 
   return '';

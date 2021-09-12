@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react';
 
-import {classNames} from '../../../../utilities/css';
-import {isServer} from '../../../../utilities/target';
-import {EventListener} from '../../../EventListener';
+import {classNames} from '../../../../../../utilities/css';
+import {isServer} from '../../../../../../utilities/target';
+import {EventListener} from '../../../../../EventListener';
 
 import styles from './MultiSlidable.scss';
 
@@ -22,7 +22,7 @@ export interface MultiSlidableProps {
   draggerY?: number;
   onAddDragger(x?: number): void;
   onDraggerClick(id: string): void;
-  onChange(position: Position, id: string): void;
+  onDraggerMove(id: string, position: Position): void;
   onDraggerHeight?(height: number): void;
 }
 
@@ -226,12 +226,12 @@ export class MultiSlidable extends PureComponent<MultiSlidableProps, State> {
       return;
     }
 
-    const {onChange} = this.props;
+    const {onDraggerMove} = this.props;
 
     const rect = this.node.getBoundingClientRect();
     const offsetX = x - rect.left;
     const offsetY = y - rect.top;
-    onChange({x: offsetX, y: offsetY}, this.state.draggingId);
+    onDraggerMove(this.state.draggingId, {x: offsetX, y: offsetY});
   };
 }
 

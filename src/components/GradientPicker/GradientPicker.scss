@@ -62,12 +62,7 @@
 }
 
 .TypePicker {
-  display: flex;
   margin-bottom: spacing(tight);
-
-  .buttonGroup {
-    flex: 1;
-  }
 }
 
 .OrientationPicker {
@@ -76,9 +71,6 @@
 }
 
 .StopPicker {
-  position: relative;
-  width: 100%;
-  height: 24px;
   margin-bottom: spacing(base);
 }
 

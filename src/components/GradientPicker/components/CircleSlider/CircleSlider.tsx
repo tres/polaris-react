@@ -61,6 +61,12 @@ export class CircleSlider extends React.Component<IProps, IState> {
     onChange: () => ({}),
   };
 
+  state: IState = {
+    angle: 0,
+    currentStepValue: 0,
+    isMouseMove: false,
+  };
+
   private maxLineWidth: number;
   private radius: number;
   private countSteps: number;
@@ -71,11 +77,6 @@ export class CircleSlider extends React.Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props);
-    this.state = {
-      angle: 0,
-      currentStepValue: 0,
-      isMouseMove: false,
-    };
 
     const {
       min,
