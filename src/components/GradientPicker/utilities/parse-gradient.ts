@@ -1,4 +1,6 @@
-import {WarningType} from '../types';
+import {v4 as uuid} from 'uuid';
+
+import {GradientType, WarningType} from '../types';
 
 import {Parse} from './parser';
 import {ValidateAst} from './validate-ast';
@@ -24,7 +26,6 @@ export function parseGradient(value?: string | null): Gradient {
   try {
     const ast = Parse(value);
     const validatedAst = ValidateAst(ast);
-
     if (!validatedAst.supported) {
       return {
         tag: 'unsupported',
@@ -35,35 +36,29 @@ export function parseGradient(value?: string | null): Gradient {
 
     const {gradient} = validatedAst;
 
-    if (gradient.type === 'linear-gradient') {
+    const stops = gradient.colorStops.reduce((stops, stop) => {
+      const id = uuid();
+
       return {
-        tag: 'valid',
-        type: 'linear' as any,
-        stops: gradient.colorStops.reduce((stops, stop) => {
-          const id = generateId();
-
-          return {
-            ...stops,
-            [id]: {id, position: stop.length.value, color: stop.value.hsb},
-          };
-        }, {}),
+        ...stops,
+        [id]: {id, position: stop.length.value, color: stop.value.hsb},
       };
-    }
+    }, {});
 
-    if (gradient.type === 'radial-gradient') {
-      return {
-        tag: 'valid',
-        type: 'radial' as any,
-        stops: gradient.colorStops.reduce((stops, stop) => {
-          const id = generateId();
-
-          return {
-            ...stops,
-            [id]: {id, position: stop.length.value, color: stop.value.hsb},
-          };
-        }, {}),
-      };
-    }
+    const linearOrientation =
+      gradient.type === 'linear' &&
+      gradient.orientation != null &&
+      gradient.orientation.type === 'angular'
+        ? gradient.orientation
+        : null;
+    console.log('orientation');
+    console.log(gradient.orientation);
+    return {
+      tag: 'valid',
+      type: gradient.type as GradientType,
+      linearOrientation,
+      stops,
+    };
   } catch (error) {
     return {
       tag: 'unsupported',
@@ -94,10 +89,4 @@ function unwrapGradient(value: string) {
   }
 
   return null;
-}
-
-let id = 1000;
-
-function generateId() {
-  return `${id++}`;
 }

@@ -12,6 +12,8 @@ export interface Stop {
 
 export type GradientType = 'linear' | 'radial' | 'conic' | 'custom';
 
+export type LinearOrientation = {type: string; value: string} | null;
+
 export enum ErrorType {
   ContainsForbiddenCharacters = 'containsForbiddenCharacters',
 }

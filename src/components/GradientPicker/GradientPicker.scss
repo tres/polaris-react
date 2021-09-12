@@ -41,24 +41,23 @@
 
   &:hover {
     > .circle {
-      opacity: 0.4;
+      opacity: 0.6;
+      transform: scale(1);
     }
   }
 
   .circle {
     cursor: pointer;
     position: relative;
-    top: 9px;
+    top: 3px;
     z-index: 99;
     margin: 0 auto;
-    border-radius: 50%;
-    border: 1px solid var(--p-surface);
+    transform: scale(0.8);
+    height: 75px;
+    width: 75px;
 
-    height: 60px;
-    width: 60px;
-
-    transition: opacity duration(slow) easing();
-    opacity: 0;
+    transition: duration(slow) easing();
+    opacity: 0.2;
   }
 }
 
@@ -71,6 +70,11 @@
   }
 }
 
+.OrientationPicker {
+  width: 100%;
+  margin-bottom: spacing(tight);
+}
+
 .StopPicker {
   position: relative;
   width: 100%;
@@ -80,4 +84,61 @@
 
 .ColorPicker {
   width: 100%;
+}
+
+.LinearOrientationWrapper {
+  width: 100%;
+  display: flex;
+}
+
+.LinearOrientationCustomInput {
+  @include text-style-input;
+  position: relative;
+  display: block;
+  flex: 1 1 0%;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  appearance: none;
+  caret-color: var(--p-text);
+  color: var(--p-text);
+  @include focus-ring($border-width: border-width());
+  background-color: var(--p-surface);
+  border: 1px solid var(--p-border-subdued);
+  border-top-color: var(--p-border-shadow);
+  border-radius: var(--p-border-radius-base);
+}
+
+.LinearOrientationButton {
+  > button {
+    padding-left: rem(13.5px);
+    padding-right: rem(14px);
+  }
+}
+.Rotate45 {
+  > span {
+    transform: rotate(45deg);
+  }
+}
+
+.Rotate90 {
+  > span {
+    transform: rotate(90deg);
+  }
+}
+
+.Rotate135 {
+  > span {
+    transform: rotate(135deg);
+  }
+}
+
+.Rotate180 {
+  > span {
+    transform: rotate(180deg);
+  }
 }

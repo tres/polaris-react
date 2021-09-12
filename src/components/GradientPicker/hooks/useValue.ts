@@ -5,7 +5,7 @@ import {stringify} from 'scss-parser';
 
 import {parseGradient} from '../utilities';
 import {hsbToRgb, rgbString} from '../../../utilities/color-transformers';
-import type {GradientType, Stops, Stop} from '../types';
+import type {GradientType, Stops, Stop, LinearOrientation} from '../types';
 
 const DEFAULT_INITIAL_STOPS: Stops = {
   1: {
@@ -20,6 +20,11 @@ const DEFAULT_INITIAL_STOPS: Stops = {
   },
 };
 
+const DEFAULT_INITIAL_LINEAR_ORIENTATION: LinearOrientation = {
+  type: 'angular',
+  value: '90',
+};
+
 interface Input {
   value: string;
   onValueChange(value: string): void;
@@ -31,6 +36,10 @@ export function useValue({
 }: Input) {
   const [canUsePicker, setCanUsePicker] = useState(true);
   const [type, setType] = useState<GradientType>('linear');
+
+  const [linearOrientation, setLinearOrientation] = useState<LinearOrientation>(
+    DEFAULT_INITIAL_LINEAR_ORIENTATION,
+  );
   const [stops, setStops] = useState<Stops>(DEFAULT_INITIAL_STOPS);
   const [activeStopId, setActiveStopId] = useState(
     Object.keys(DEFAULT_INITIAL_STOPS)[0],
@@ -42,12 +51,12 @@ export function useValue({
     if (type === 'custom') {
       return;
     }
-    const nextInternalValue = stringifyGradient(type, stops);
+    const nextInternalValue = stringifyGradient(type, stops, linearOrientation);
     setInternalValue(() => nextInternalValue);
     if (externalValue !== nextInternalValue) {
       onExternalValueChange(nextInternalValue);
     }
-  }, [stops, type, externalValue, onExternalValueChange]);
+  }, [stops, type, linearOrientation, externalValue, onExternalValueChange]);
 
   useEffect(() => {
     if (externalValue !== internalValue) {
@@ -57,6 +66,12 @@ export function useValue({
           setCanUsePicker(true);
           setActiveStopId(Object.keys(parsedGradient.stops)[0]);
           setStops(parsedGradient.stops);
+          if (
+            parsedGradient.type === 'linear' &&
+            parsedGradient.linearOrientation != null
+          ) {
+            setLinearOrientation(parsedGradient.linearOrientation);
+          }
           setInternalValue(externalValue);
         });
       } else {
@@ -123,14 +138,20 @@ export function useValue({
     (stopA, stopB) => stopA.position - stopB.position,
   );
 
-  const linearGradient = stringifyGradient('linear', stops);
-  const gradient = stringifyGradient(type, stops);
-  console.log(internalValue, 'internalValue');
+  const linearGradient = stringifyGradient('linear', stops, {
+    type: 'angular',
+    value: '90',
+  });
+  const gradient = stringifyGradient(type, stops, linearOrientation);
+
   return {
     stops,
     setStops,
     type,
     setType,
+    linearOrientation,
+    setLinearOrientation: (value: string) =>
+      setLinearOrientation({type: 'angular', value}),
     activeStopId,
     setActiveStopId,
     activeStop,
@@ -141,32 +162,41 @@ export function useValue({
   };
 }
 
-function stringifyGradient(type: GradientType, stops: Stops) {
+function stringifyGradient(
+  type: GradientType,
+  stops: Stops,
+  linearOrientation: LinearOrientation,
+) {
   const sortedStops = Object.values(stops).sort(
     (stopA, stopB) => stopA.position - stopB.position,
   );
 
   if (sortedStops.length === 1) {
-    return rgbString(hsbToRgb(stops[0].color));
+    return rgbString(hsbToRgb(sortedStops[0].color));
   }
-  const stopText = sortedStops.reduce(
-    (acc, stop) =>
-      `${acc}, ${rgbString(hsbToRgb(stop.color))} ${Math.floor(
-        stop.position,
-      )}%`,
-    '',
-  );
+
+  const stopText = sortedStops
+    .reduce(
+      (acc, stop) =>
+        `${acc}, ${rgbString(hsbToRgb(stop.color))} ${Math.floor(
+          stop.position,
+        )}%`,
+      '',
+    )
+    .slice(2);
 
   if (type === 'linear') {
-    return `linear-gradient(to right${stopText})`;
+    const orientationText =
+      linearOrientation == null ? '' : `${linearOrientation.value}deg, `;
+    return `linear-gradient(${orientationText}${stopText})`;
   }
 
   if (type === 'radial') {
-    return `radial-gradient(circle${stopText})`;
+    return `radial-gradient(circle, ${stopText})`;
   }
 
   if (type === 'conic') {
-    return `conic-gradient(${stopText.slice(2)})`;
+    return `conic-gradient(${stopText})`;
   }
 
   return '';

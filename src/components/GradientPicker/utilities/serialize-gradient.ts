@@ -5,19 +5,19 @@ import type {GradientValue} from './types';
 
 export const serializeGradient = (function () {
   const visitor: {[key: string]: any} = {
-    'visit_linear-gradient': function (node: any): any {
+    visit_linear(node: any): any {
       return visitor.visit_gradient(node);
     },
 
-    'visit_repeating-linear-gradient': function (node: any): any {
+    'visit_repeating-linear': function (node: any): any {
       return visitor.visit_gradient(node);
     },
 
-    'visit_radial-gradient': function (node: any): any {
+    visit_radial(node: any): any {
       return visitor.visit_gradient(node);
     },
 
-    'visit_repeating-radial-gradient': function (node: any): any {
+    'visit_repeating-radial': function (node: any): any {
       return visitor.visit_gradient(node);
     },
 

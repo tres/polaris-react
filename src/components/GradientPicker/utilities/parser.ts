@@ -62,23 +62,19 @@ export const Parse = (function () {
 
   function matchDefinition() {
     return (
+      matchGradient('linear', TOKENS.linearGradient, matchLinearOrientation) ||
       matchGradient(
-        'linear-gradient',
-        TOKENS.linearGradient,
-        matchLinearOrientation,
-      ) ||
-      matchGradient(
-        'repeating-linear-gradient',
+        'repeating-linear',
         TOKENS.repeatingLinearGradient,
         matchLinearOrientation,
       ) ||
       matchGradient(
-        'radial-gradient',
+        'radial',
         TOKENS.radialGradient,
         matchListRadialOrientations,
       ) ||
       matchGradient(
-        'repeating-radial-gradient',
+        'repeating-radial',
         TOKENS.repeatingRadialGradient,
         matchListRadialOrientations,
       )

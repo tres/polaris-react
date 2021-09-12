@@ -1,5 +1,12 @@
 import React, {useState, useLayoutEffect, useRef} from 'react';
+import {
+  ArrowUpMinor,
+  ArrowLeftMinor,
+  ArrowRightMinor,
+  ArrowDownMinor,
+} from '@shopify/polaris-icons';
 
+import {Icon} from '../Icon';
 import {Card} from '../Card';
 import {TextField} from '../TextField';
 import {clamp} from '../../utilities/clamp';
@@ -10,7 +17,13 @@ import type {HSBAColor} from '../../utilities/color-types';
 
 import {useValue} from './hooks';
 import type {Stops} from './types';
-import {MultiSlidable, StopList, AnglePicker} from './components';
+import {
+  MultiSlidable,
+  StopList,
+  AnglePicker,
+  CircleSlider,
+  LinearOrientationPicker,
+} from './components';
 import styles from './GradientPicker.scss';
 
 export interface GradientPickerProps {}
@@ -47,6 +60,8 @@ export function GradientPicker(props: GradientPickerProps) {
     setType,
     stops,
     setStops,
+    linearOrientation,
+    setLinearOrientation,
     activeStopId,
     setActiveStopId,
     activeStop,
@@ -117,8 +132,16 @@ export function GradientPicker(props: GradientPickerProps) {
       <Card>
         <div className={styles.GradientPicker}>
           <div className={styles.Preview}>
-            <div className={styles.circle} />
-
+            {linearOrientation && (
+              <div className={styles.circle}>
+                <CircleSlider
+                  value={parseInt(linearOrientation.value, 10)}
+                  onChange={(value) =>
+                    value && setLinearOrientation(value.toString())
+                  }
+                />
+              </div>
+            )}
             <div className={styles.foreground} style={{background: gradient}} />
           </div>
           <div className={styles.Controls}>

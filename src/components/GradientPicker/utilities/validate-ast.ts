@@ -14,7 +14,7 @@ interface UnsupportedOutput {
 
 type Output = SupportedOutput | UnsupportedOutput;
 
-const SUPPORTED_TYPES = ['linear-gradient', 'radial-gradient'];
+const SUPPORTED_TYPES = ['linear', 'radial'];
 
 export const ValidateAst = (input: GradientValue[]): Output => {
   const warnings: Warning[] = [];
@@ -50,7 +50,11 @@ export const ValidateAst = (input: GradientValue[]): Output => {
     }
   }
 
-  function validateOrientation() {}
+  function validateOrientation() {
+    if (gradient.orientation.type === 'directional') {
+      warnings.push({type: WarningType.UnsupportedOrientation});
+    }
+  }
 
   function validateColorStops() {
     for (const colorStop of gradient.colorStops) {

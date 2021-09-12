@@ -4,6 +4,7 @@ import type {
   Error,
   Warning,
   Stops,
+  LinearOrientation,
   GradientType as AcceptedGradientType,
 } from '../types';
 
@@ -16,6 +17,7 @@ export type Gradient =
 interface ValidGradient {
   tag: 'valid';
   stops: Stops;
+  linearOrientation: LinearOrientation;
   type: AcceptedGradientType;
 }
 
@@ -44,10 +46,10 @@ export interface GradientValue {
 }
 
 type GradientType =
-  | 'linear-gradient'
-  | 'repeating-linear-gradient'
-  | 'radial-gradient'
-  | 'repeating-radial-gradient';
+  | 'linear'
+  | 'repeating-linear'
+  | 'radial'
+  | 'repeating-radial';
 
 interface Orientation {
   type: 'directional' | 'angular';
