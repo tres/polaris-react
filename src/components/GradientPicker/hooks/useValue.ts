@@ -7,24 +7,6 @@ import {parseGradient} from '../utilities';
 import {hsbToRgb, rgbString} from '../../../utilities/color-transformers';
 import type {GradientType, Stops, Stop, LinearOrientation} from '../types';
 
-const DEFAULT_INITIAL_STOPS: Stops = {
-  1: {
-    id: '1',
-    position: 0,
-    color: {hue: 193, saturation: 0.4, brightness: 0.7, alpha: 1},
-  },
-  2: {
-    id: '2',
-    position: 100,
-    color: {hue: 137, saturation: 0.27, brightness: 0.86, alpha: 1},
-  },
-};
-
-const DEFAULT_INITIAL_LINEAR_ORIENTATION: LinearOrientation = {
-  type: 'angular',
-  value: '90',
-};
-
 interface Input {
   value: string;
   onValueChange(value: string): void;
@@ -35,25 +17,24 @@ export function useValue({
   onValueChange: onExternalValueChange,
 }: Input) {
   const [canUsePicker, setCanUsePicker] = useState(true);
-  const [type, setType] = useState<GradientType>('linear');
+  const [type, setType] = useState<GradientType>('empty');
 
   const [linearOrientation, setLinearOrientation] = useState<LinearOrientation>(
-    DEFAULT_INITIAL_LINEAR_ORIENTATION,
+    null,
   );
-  const [stops, setStops] = useState<Stops>(DEFAULT_INITIAL_STOPS);
-  const [activeStopId, setActiveStopId] = useState(
-    Object.keys(DEFAULT_INITIAL_STOPS)[0],
-  );
+  const [stops, setStops] = useState<Stops>({});
+  const [activeStopId, setActiveStopId] = useState<string | null>(null);
 
-  const [internalValue, setInternalValue] = useState(externalValue);
+  const [internalValue, setInternalValue] = useState('');
 
   useEffect(() => {
-    if (type === 'custom') {
+    if (type === 'custom' || type === 'empty') {
       return;
     }
     const nextInternalValue = stringifyGradient(type, stops, linearOrientation);
+
     setInternalValue(() => nextInternalValue);
-    if (externalValue !== nextInternalValue) {
+    if (externalValue !== nextInternalValue && nextInternalValue !== '') {
       onExternalValueChange(nextInternalValue);
     }
   }, [stops, type, linearOrientation, externalValue, onExternalValueChange]);
@@ -62,23 +43,29 @@ export function useValue({
     if (externalValue !== internalValue) {
       const parsedGradient = parseGradient(externalValue);
       if (parsedGradient.tag === 'valid') {
+        setInternalValue(externalValue);
+
         unstable_batchedUpdates(() => {
           setCanUsePicker(true);
           setActiveStopId(Object.keys(parsedGradient.stops)[0]);
           setStops(parsedGradient.stops);
+          if (type === 'empty') {
+            setType(parsedGradient.type);
+          }
           if (
             parsedGradient.type === 'linear' &&
             parsedGradient.linearOrientation != null
           ) {
             setLinearOrientation(parsedGradient.linearOrientation);
           }
-          setInternalValue(externalValue);
         });
       } else {
+        setInternalValue(externalValue);
+        setType(externalValue === '' ? 'empty' : 'custom');
         setCanUsePicker(false);
       }
     }
-  }, [externalValue, internalValue]);
+  }, [externalValue, internalValue, type]);
 
   const debouncedParseGradient = useMemo(
     () =>
@@ -86,7 +73,6 @@ export function useValue({
         (value: string) => {
           const parsedGradient = parseGradient(value);
           if (parsedGradient.tag === 'valid') {
-            console.log(parsedGradient);
             unstable_batchedUpdates(() => {
               setActiveStopId(Object.keys(parsedGradient.stops)[0]);
               setType(parsedGradient.type);
@@ -132,7 +118,7 @@ export function useValue({
   //   }
   // }, [value, debouncedParseGradient]);
 
-  const activeStop = stops[activeStopId];
+  const activeStop = activeStopId == null ? null : stops[activeStopId];
 
   const sortedStops = Object.values(stops).sort(
     (stopA, stopB) => stopA.position - stopB.position,

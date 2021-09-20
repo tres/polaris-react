@@ -51,8 +51,7 @@ export function parseGradient(value?: string | null): Gradient {
       gradient.orientation.type === 'angular'
         ? gradient.orientation
         : null;
-    console.log('orientation');
-    console.log(gradient.orientation);
+
     return {
       tag: 'valid',
       type: gradient.type as GradientType,
@@ -60,6 +59,7 @@ export function parseGradient(value?: string | null): Gradient {
       stops,
     };
   } catch (error) {
+    console.log(error);
     return {
       tag: 'unsupported',
       string: value,

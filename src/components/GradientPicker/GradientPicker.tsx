@@ -8,17 +8,28 @@ import {ColorPicker} from '../ColorPicker';
 import type {HSBAColor} from '../../utilities/color-types';
 
 import {useValue} from './hooks';
-import {StopList, CircleSlider, StopPicker, TypePicker} from './components';
+import {
+  StopList,
+  CircleSlider,
+  StopPicker,
+  TypePicker,
+  PresetPicker,
+} from './components';
 import styles from './GradientPicker.scss';
 
-export interface GradientPickerProps {}
+export interface GradientPickerProps {
+  presetColors: {value: string; tag: 'hex'; label: string}[];
+}
 
 const DEFAULT_GRADIENT =
-  'linear-gradient(to right, rgba(107, 163, 179, 1) 0%, rgba(160, 219, 177, 1) 100%)';
+  'linear-gradient(90deg, rgba(107, 163, 179, 1) 0%, rgba(160, 219, 177, 1) 100%)';
 
 export function GradientPicker(props: GradientPickerProps) {
   const [value, setValue] = useState(DEFAULT_GRADIENT);
-
+  const presetColors = [
+    {label: 'Accent 1', value: '#B5E1ED'},
+    {label: 'Accent 2', value: '#7B9E85'},
+  ];
   const {
     type,
     setType,
@@ -35,18 +46,33 @@ export function GradientPicker(props: GradientPickerProps) {
     canUsePicker,
   } = useValue({value, onValueChange: setValue});
 
-  const controlMarkup =
-    type === 'custom' ? (
-      <TextField
-        monospaced
-        spellCheck={false}
-        autoComplete={false}
-        value={value}
-        onChange={setValue}
-        label=""
-        multiline={4}
-      />
-    ) : (
+  const controlMarkup = (() => {
+    if (type === 'custom') {
+      return (
+        <TextField
+          monospaced
+          spellCheck={false}
+          autoComplete={false}
+          value={value}
+          onChange={setValue}
+          label=""
+          multiline={4}
+        />
+      );
+    }
+
+    if (value === '' || activeStop == null || activeStopId == null) {
+      return (
+        <PresetPicker
+          presets={presetColors}
+          onSelect={(value) => {
+            setValue(value);
+          }}
+        />
+      );
+    }
+
+    return (
       <>
         <div className={styles.StopPicker}>
           <StopPicker
@@ -77,42 +103,48 @@ export function GradientPicker(props: GradientPickerProps) {
         </div>
       </>
     );
+  })();
 
   const supportsAngularOrientation = type === 'conic' || type === 'linear';
+
+  const pickerMarkup = (
+    <>
+      <div className={styles.Preview}>
+        {linearOrientation && supportsAngularOrientation && (
+          <div className={styles.circle}>
+            <CircleSlider
+              value={parseInt(linearOrientation.value, 10)}
+              onChange={(value) =>
+                value && setLinearOrientation(value.toString())
+              }
+            />
+          </div>
+        )}
+        <div className={styles.foreground} style={{background: gradient}} />
+      </div>
+      <div className={styles.Controls}>
+        <div className={styles.TypePicker}>
+          <TypePicker
+            disabled={!canUsePicker}
+            activeType={type}
+            onChange={setType}
+          />
+        </div>
+        {controlMarkup}
+      </div>
+    </>
+  );
 
   return (
     <div className={styles.CardWrapper}>
       <Card>
-        <div className={styles.GradientPicker}>
-          <div className={styles.Preview}>
-            {linearOrientation && supportsAngularOrientation && (
-              <div className={styles.circle}>
-                <CircleSlider
-                  value={parseInt(linearOrientation.value, 10)}
-                  onChange={(value) =>
-                    value && setLinearOrientation(value.toString())
-                  }
-                />
-              </div>
-            )}
-            <div className={styles.foreground} style={{background: gradient}} />
-          </div>
-          <div className={styles.Controls}>
-            <div className={styles.TypePicker}>
-              <TypePicker
-                disabled={!canUsePicker}
-                activeType={type}
-                onChange={setType}
-              />
-            </div>
-            {controlMarkup}
-          </div>
-        </div>
+        <div className={styles.GradientPicker}>{pickerMarkup}</div>
       </Card>
     </div>
   );
 
   function handleColorChange(color: HSBAColor) {
+    if (activeStopId == null) return;
     setStops((prev) => ({
       ...prev,
       [activeStopId]: {...prev[activeStopId], color},
@@ -152,11 +184,13 @@ export function GradientPicker(props: GradientPickerProps) {
   }
 
   function handleAddStop(x?: number) {
+    if (activeStop == null) return;
     const id = uuid();
     const position = x == null ? getMiddlePosition() : x;
     const color = {
       ...activeStop.color,
-      brightness: clamp(activeStop.color.brightness - 0.3, 0, 1),
+      saturation: clamp(activeStop.color.saturation * 0.95, 0, 1),
+      hue: clamp(activeStop.color.hue + 10, 0, 360),
     };
 
     setStops((prev) => ({...prev, [id]: {id, position, color}}));

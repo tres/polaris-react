@@ -10,7 +10,7 @@ export interface Stop {
   color: HSBAColor;
 }
 
-export type GradientType = 'linear' | 'radial' | 'conic' | 'custom';
+export type GradientType = 'linear' | 'radial' | 'conic' | 'custom' | 'empty';
 
 export type LinearOrientation = {type: string; value: string} | null;
 
