@@ -16,6 +16,8 @@ import {
 import {Portal} from '../Portal';
 import {portal} from '../shared';
 import {useUniqueId} from '../../utilities/unique-id';
+import {ActionList} from '../ActionList';
+import type {ActionListItemDescriptor} from '../../types';
 
 import {
   PopoverCloseSource,
@@ -114,7 +116,7 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
 
     const WrapperComponent: any = activatorWrapper;
     const id = useUniqueId('popover');
-
+    const id2 = useUniqueId('popoverhidden');
     function forceUpdatePosition() {
       overlayRef.current?.forceUpdatePosition();
     }
@@ -150,6 +152,7 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
     }, [id, active, ariaHaspopup]);
 
     const handleClose = (source: PopoverCloseSource) => {
+      // console.log(`handleClose --> ${source}`);
       onClose(source);
       if (activatorContainer.current == null || preventFocusOnClose) {
         return;
@@ -168,6 +171,11 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
           focusableActivator.focus();
         }
       }
+    };
+
+    const hiddenContainerOnClose = (source: PopoverCloseSource) => {
+      console.log(`hiddenContainerOnClose --> ${source}`);
+      handleClose(source);
     };
 
     useEffect(() => {
@@ -194,8 +202,49 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
         );
       }
       setAccessibilityAttributes();
-    }, [activatorNode, setAccessibilityAttributes]);
+    }, [activatorNode, setAccessibilityAttributes, children]);
 
+    const popoverActionList: ActionListItemDescriptor[] = [
+      {
+        content: 'HIDDEN -- First Popover Content Action',
+        role: 'option',
+        onAction: () => console.log('HIDDEN -- First Action CLICKED'),
+      },
+      {
+        content: 'HIDDEN -- Second Popover Content Action',
+        role: 'option',
+        onAction: () => console.log('HIDDEN -- Second Action CLICKED'),
+      },
+    ];
+
+    const hiddenPopoverContentStyle: React.CSSProperties = active
+      ? {
+          opacity: 0,
+          visibility: 'visible',
+        }
+      : {
+          opacity: 0,
+          visibility: 'hidden',
+        };
+    const screenReaderPopoverContent = activatorNode ? (
+      <div style={hiddenPopoverContentStyle}>
+        <PopoverOverlay
+          id={id2}
+          activator={activatorNode}
+          preferInputActivator={preferInputActivator}
+          onClose={hiddenContainerOnClose}
+          active={active}
+          fakeContent
+          // We want to force fixed position to the hidden overlay to ensure that it doesn't affect other dom objects
+          fixed
+          colorScheme={colorScheme}
+          zIndexOverride={zIndexOverride}
+          {...rest}
+        >
+          <ActionList items={popoverActionList.map((action) => action)} />
+        </PopoverOverlay>
+      </div>
+    ) : null;
     const portal = activatorNode ? (
       <Portal idPrefix="popover">
         <PopoverOverlay
@@ -208,6 +257,7 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
           fixed={fixed}
           colorScheme={colorScheme}
           zIndexOverride={zIndexOverride}
+          autofocusTarget="none"
           {...rest}
         >
           {children}
@@ -219,6 +269,7 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
       <WrapperComponent ref={activatorContainer}>
         {Children.only(activator)}
         {portal}
+        {screenReaderPopoverContent}
       </WrapperComponent>
     );
   },

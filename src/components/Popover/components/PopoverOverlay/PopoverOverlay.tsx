@@ -53,6 +53,7 @@ export interface PopoverOverlayProps {
   onClose(source: PopoverCloseSource): void;
   colorScheme?: NonNullable<ThemeProviderProps['theme']>['colorScheme'];
   autofocusTarget?: PopoverAutofocusTarget;
+  fakeContent?: boolean;
 }
 
 interface State {
@@ -130,9 +131,11 @@ export class PopoverOverlay extends PureComponent<PopoverOverlayProps, State> {
       preferInputActivator = true,
       fixed,
       zIndexOverride,
+      fakeContent,
     } = this.props;
     const {transitionStatus} = this.state;
-    if (transitionStatus === TransitionStatus.Exited && !active) return null;
+    if (!fakeContent && transitionStatus === TransitionStatus.Exited && !active)
+      return null;
 
     const className = classNames(
       styles.PopoverOverlay,
@@ -214,6 +217,7 @@ export class PopoverOverlay extends PureComponent<PopoverOverlayProps, State> {
       hideOnPrint,
       colorScheme,
       autofocusTarget,
+      active,
     } = this.props;
 
     const className = classNames(
@@ -244,11 +248,17 @@ export class PopoverOverlay extends PureComponent<PopoverOverlayProps, State> {
       </div>
     );
 
-    return (
-      <div className={className} {...overlay.props}>
+    const eventListenerMarkup = active ? (
+      <>
         <EventListener event="click" handler={this.handleClick} />
         <EventListener event="touchstart" handler={this.handleClick} />
         <KeypressListener keyCode={Key.Escape} handler={this.handleEscape} />
+      </>
+    ) : null;
+
+    return (
+      <div className={className} {...overlay.props}>
+        {eventListenerMarkup}
         <div
           className={styles.FocusTracker}
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
@@ -296,7 +306,7 @@ export class PopoverOverlay extends PureComponent<PopoverOverlayProps, State> {
     this.props.onClose(PopoverCloseSource.EscapeKeypress);
   };
 
-  private handleFocusFirstItem = () => {
+  private handleFocusFirstItem = (event: any) => {
     this.props.onClose(PopoverCloseSource.FocusOut);
   };
 

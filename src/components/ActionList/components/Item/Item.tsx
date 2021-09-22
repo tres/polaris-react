@@ -118,7 +118,7 @@ export function Item({
   );
 
   return (
-    <li role={role}>
+    <li role={role} onFocus={() => console.log(`${contentText} has focus`)}>
       {scrollMarkup}
       {control}
     </li>
