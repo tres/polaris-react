@@ -1,4 +1,4 @@
-import React, {PureComponent, Children, createRef} from 'react';
+import React, {PureComponent, Children, createRef, SyntheticEvent} from 'react';
 import {durationBase} from '@shopify/polaris-tokens';
 
 import {findFirstFocusableNode} from '../../../../utilities/focus';
@@ -54,6 +54,8 @@ export interface PopoverOverlayProps {
   colorScheme?: NonNullable<ThemeProviderProps['theme']>['colorScheme'];
   autofocusTarget?: PopoverAutofocusTarget;
   fakeContent?: boolean;
+  onFocusChange?(e: SyntheticEvent): void;
+  forceFocus?: string;
 }
 
 interface State {
@@ -114,6 +116,10 @@ export class PopoverOverlay extends PureComponent<PopoverOverlayProps, State> {
           this.setState({transitionStatus: TransitionStatus.Exited});
         }, durationBase);
       });
+    }
+
+    if (this.props.forceFocus && this.props.active) {
+      this.forceFocusContent(this.props.forceFocus);
     }
   }
 
@@ -201,6 +207,25 @@ export class PopoverOverlay extends PureComponent<PopoverOverlayProps, State> {
     });
   }
 
+  private forceFocusContent(targetID: string) {
+    requestAnimationFrame(() => {
+      if (this.contentNode.current == null) {
+        return;
+      }
+
+      const allFocusableChilds = this.contentNode.current.querySelectorAll(
+        'a,frame,iframe,input:not([type=hidden]):not(:disabled),select:not(:disabled),textarea:not(:disabled),button:not(:disabled),*[tabindex]',
+      );
+
+      for (const itm of allFocusableChilds) {
+        const htmlITM = itm as HTMLElement;
+        if (targetID === itm.id) {
+          htmlITM.focus();
+        }
+      }
+    });
+  }
+
   // eslint-disable-next-line @shopify/react-no-multiple-render-methods
   private renderPopover: PositionedOverlayProps['render'] = (
     overlayDetails,
@@ -243,6 +268,7 @@ export class PopoverOverlay extends PureComponent<PopoverOverlayProps, State> {
         className={contentClassNames}
         style={contentStyles}
         ref={this.contentNode}
+        onFocus={this.props.onFocusChange}
       >
         {renderPopoverContent(children, {sectioned})}
       </div>

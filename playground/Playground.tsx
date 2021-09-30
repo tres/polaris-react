@@ -20,11 +20,13 @@ export function Playground() {
 
   const popoverActionList: ActionListItemDescriptor[] = [
     {
+      id: 'one',
       content: 'First Popover Content Action',
       role: 'option',
       onAction: () => console.log('First Action CLICKED'),
     },
     {
+      id: 'two',
       content: 'Second Popover Content Action',
       role: 'option',
       onAction: () => console.log('Second Action CLICKED'),

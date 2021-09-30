@@ -6,6 +6,7 @@ import React, {
   useImperativeHandle,
   useRef,
   useState,
+  SyntheticEvent,
 } from 'react';
 import type {AriaAttributes} from 'react';
 
@@ -14,7 +15,7 @@ import {
   focusNextFocusableNode,
 } from '../../utilities/focus';
 import {Portal} from '../Portal';
-import {portal} from '../shared';
+import {overlay, portal} from '../shared';
 import {useUniqueId} from '../../utilities/unique-id';
 import {ActionList} from '../ActionList';
 import type {ActionListItemDescriptor} from '../../types';
@@ -110,6 +111,7 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
     ref,
   ) {
     const [activatorNode, setActivatorNode] = useState<HTMLElement>();
+    const [forceFocusTargetID, setForceFocusTargetID] = useState<string>();
 
     const overlayRef = useRef<PopoverOverlay>(null);
     const activatorContainer = useRef<HTMLElement>(null);
@@ -152,7 +154,6 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
     }, [id, active, ariaHaspopup]);
 
     const handleClose = (source: PopoverCloseSource) => {
-      // console.log(`handleClose --> ${source}`);
       onClose(source);
       if (activatorContainer.current == null || preventFocusOnClose) {
         return;
@@ -167,15 +168,27 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
           findFirstFocusableNodeIncludingDisabled(activatorNode) ||
           findFirstFocusableNodeIncludingDisabled(activatorContainer.current) ||
           activatorContainer.current;
-        if (!focusNextFocusableNode(focusableActivator, isInPortal)) {
-          focusableActivator.focus();
-        }
-      }
-    };
 
-    const hiddenContainerOnClose = (source: PopoverCloseSource) => {
-      console.log(`hiddenContainerOnClose --> ${source}`);
-      handleClose(source);
+        setForceFocusTargetID('');
+
+        switch (source) {
+          case PopoverCloseSource.FocusOut:
+            if (
+              !focusNextFocusableNode(focusableActivator, isInPopoverContext)
+            ) {
+              focusableActivator.focus();
+            }
+            break;
+          // According to AIRA practices, ESC key should keep focus on the activator
+          case PopoverCloseSource.EscapeKeypress:
+            focusableActivator.focus();
+            break;
+        }
+
+        // if (!focusNextFocusableNode(focusableActivator, isInPortal)) {
+        //   focusableActivator.focus();
+        // }
+      }
     };
 
     useEffect(() => {
@@ -204,19 +217,6 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
       setAccessibilityAttributes();
     }, [activatorNode, setAccessibilityAttributes, children]);
 
-    const popoverActionList: ActionListItemDescriptor[] = [
-      {
-        content: 'HIDDEN -- First Popover Content Action',
-        role: 'option',
-        onAction: () => console.log('HIDDEN -- First Action CLICKED'),
-      },
-      {
-        content: 'HIDDEN -- Second Popover Content Action',
-        role: 'option',
-        onAction: () => console.log('HIDDEN -- Second Action CLICKED'),
-      },
-    ];
-
     const hiddenPopoverContentStyle: React.CSSProperties = active
       ? {
           opacity: 0,
@@ -226,22 +226,36 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
           opacity: 0,
           visibility: 'hidden',
         };
+
+    const onFocusChange = (evt: SyntheticEvent) => {
+      if (!active) {
+        return;
+      }
+
+      const targetID = (evt.nativeEvent.target as HTMLElement).id;
+
+      if (targetID !== forceFocusTargetID) {
+        setForceFocusTargetID(targetID);
+      }
+    };
+
     const screenReaderPopoverContent = activatorNode ? (
       <div style={hiddenPopoverContentStyle}>
         <PopoverOverlay
           id={id2}
           activator={activatorNode}
           preferInputActivator={preferInputActivator}
-          onClose={hiddenContainerOnClose}
+          onClose={() => {}}
           active={active}
           fakeContent
           // We want to force fixed position to the hidden overlay to ensure that it doesn't affect other dom objects
           fixed
           colorScheme={colorScheme}
           zIndexOverride={zIndexOverride}
+          onFocusChange={onFocusChange}
           {...rest}
         >
-          <ActionList items={popoverActionList.map((action) => action)} />
+          {children}
         </PopoverOverlay>
       </div>
     ) : null;
@@ -258,6 +272,7 @@ const PopoverComponent = forwardRef<PopoverPublicAPI, PopoverProps>(
           colorScheme={colorScheme}
           zIndexOverride={zIndexOverride}
           autofocusTarget="none"
+          forceFocus={forceFocusTargetID}
           {...rest}
         >
           {children}
@@ -280,6 +295,17 @@ function isInPortal(element: Element) {
 
   while (parentElement) {
     if (parentElement.matches(portal.selector)) return false;
+    parentElement = parentElement.parentElement;
+  }
+
+  return true;
+}
+
+function isInPopoverContext(element: Element) {
+  let parentElement = element.parentElement;
+
+  while (parentElement) {
+    if (parentElement.matches(overlay.selector)) return false;
     parentElement = parentElement.parentElement;
   }
 
