@@ -13,15 +13,24 @@ Use [the changelog guidelines](/documentation/Versioning%20and%20changelog.md) t
 - Reduced the size of the `progress` pip in `Badge` ([#4658](https://github.com/Shopify/polaris-react/pull/4658))
 - Updated styling of `DropZone` border and overlay text. ([#4662](https://github.com/Shopify/polaris-react/pull/4662))
 
+- Keyboard arrow navigation support added in `ActionList` ([#4505](https://github.com/Shopify/polaris-react/pull/4505))
+- Menu role attribute value support added in `ActionList/Section` ([#4505](https://github.com/Shopify/polaris-react/pull/4505))
+
 ### Bug fixes
 
 - Fixed try-catch syntax error in `Modal` ([#4553](https://github.com/Shopify/polaris-react/pull/4553))
 - Fixed an issue with `TextField` where date and time were uneditable on click ([#4671](https://github.com/Shopify/polaris-react/pull/4671))
+- Properly support JAWS screen reader for `ActionList` ([#4505](https://github.com/Shopify/polaris-react/pull/4505))
+
+### Documentation
 
 ### Documentation
 
 - Added an example for the `small` `size` variant of `Badge` ([#4658](https://github.com/Shopify/polaris-react/pull/4658))
 - Updated top bar description and keywords to include `header`, changed category to `Navigation` ([#4672](https://github.com/Shopify/polaris-react/pull/4672))
+- Light edits to the best practices for `Modal` and `Banner` ([#4501](https://github.com/Shopify/polaris-react/pull/4501))
+- Added arrow navigation instructions in keyboard support for `ActionList` ([#4505](https://github.com/Shopify/polaris-react/pull/4505))
+- Updated examples to properly support JAWS screen reader for `Popover` and `ActionList` ([#4505](https://github.com/Shopify/polaris-react/pull/4505))
 
 ### Development workflow
 
