@@ -7,6 +7,7 @@ import {
   DiscountsMajor,
   HomeMajor,
   MarketingMajor,
+  NotificationMajor,
   OrdersMajor,
   ProductsMajor,
   SettingsMajor,
@@ -23,6 +24,7 @@ import {
   DropZoneProps,
   FormLayout,
   Frame,
+  Icon,
   Layout,
   Loading,
   Modal,
@@ -202,10 +204,33 @@ export function DetailsPage() {
     />
   );
 
+  const secondaryMenuMarkup = (
+    <TopBar.Menu
+      activatorContent={
+        <span>
+          <Icon source={NotificationMajor} />
+        </span>
+      }
+      // open={isSecondaryMenuOpen}
+      // onOpen={toggleIsSecondaryMenuOpen}
+      // onClose={toggleIsSecondaryMenuOpen}
+      open
+      onOpen={() => {}}
+      onClose={() => {}}
+      actions={[
+        {
+          items: [{content: 'Community forums'}],
+        },
+      ]}
+      colorScheme="dark"
+    />
+  );
+
   const topBarMarkup = (
     <TopBar
       showNavigationToggle
       userMenu={userMenuMarkup}
+      secondaryMenu={secondaryMenuMarkup}
       searchResultsVisible={searchActive}
       searchField={searchFieldMarkup}
       searchResults={searchResultsMarkup}
