@@ -9,6 +9,7 @@ Use [the changelog guidelines](/documentation/Versioning%20and%20changelog.md) t
 ### Bug fixes
 
 - Reverted popover exit timeout to avoid race conditions ([#4633](https://github.com/Shopify/polaris-react/pull/4633))
+- Fixed screen reader accessibility issue of the `Checkbox` component ([#4631](https://github.com/Shopify/polaris-react/pull/4631))
 
 ### Documentation
 

@@ -13,7 +13,7 @@ import {useUniqueId} from '../../utilities/unique-id';
 import {Choice, helpTextID} from '../Choice';
 import {errorTextID} from '../InlineError';
 import {Icon} from '../Icon';
-import {Error, Key, CheckboxHandles} from '../../types';
+import type {Error, CheckboxHandles} from '../../types';
 import {WithinListboxContext} from '../../utilities/listbox/context';
 
 import styles from './Checkbox.scss';
@@ -92,20 +92,17 @@ export const Checkbox = forwardRef<CheckboxHandles, CheckboxProps>(
       setKeyFocused(false);
     };
 
-    const handleInput = () => {
+    const handleOnFocus = () => {
+      onFocus?.();
+      setKeyFocused(true);
+    };
+
+    const handleOnClick = () => {
       if (onChange == null || inputNode.current == null || disabled) {
         return;
       }
-      onChange(!inputNode.current.checked, id);
+      onChange(inputNode.current.checked, id);
       inputNode.current.focus();
-    };
-
-    const handleKeyUp = (event: React.KeyboardEvent) => {
-      const {keyCode} = event;
-      !keyFocused && setKeyFocused(true);
-      if (keyCode === Key.Space) {
-        handleInput();
-      }
     };
 
     const describedBy: string[] = [];
@@ -152,13 +149,11 @@ export const Checkbox = forwardRef<CheckboxHandles, CheckboxProps>(
         helpText={helpText}
         error={error}
         disabled={disabled}
-        onClick={handleInput}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
       >
         <span className={wrapperClassName}>
           <input
-            onKeyUp={handleKeyUp}
             ref={inputNode}
             id={id}
             name={name}
@@ -167,10 +162,10 @@ export const Checkbox = forwardRef<CheckboxHandles, CheckboxProps>(
             checked={isChecked}
             disabled={disabled}
             className={inputClassName}
-            onFocus={onFocus}
             onBlur={handleBlur}
-            onClick={stopPropagation}
             onChange={noop}
+            onClick={handleOnClick}
+            onFocus={handleOnFocus}
             aria-invalid={error != null}
             aria-controls={ariaControls}
             aria-describedby={ariaDescribedBy}
@@ -188,7 +183,3 @@ export const Checkbox = forwardRef<CheckboxHandles, CheckboxProps>(
 );
 
 function noop() {}
-
-function stopPropagation<E>(event: React.MouseEvent<E>) {
-  event.stopPropagation();
-}

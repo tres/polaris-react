@@ -1,8 +1,6 @@
 import React, {AllHTMLAttributes} from 'react';
 import {mountWithApp} from 'tests/utilities';
 
-import {Key} from '../../../types';
-import {Choice} from '../../Choice';
 import {Checkbox} from '../Checkbox';
 
 describe('<Checkbox />', () => {
@@ -32,18 +30,6 @@ describe('<Checkbox />', () => {
     });
   });
 
-  it('does not propagate click events from input element', () => {
-    const spy = jest.fn();
-    const element = mountWithApp(
-      <Checkbox id="MyCheckbox" label="Checkbox" onChange={spy} />,
-    );
-
-    element.find('input')!.trigger('onClick', {
-      stopPropagation: () => {},
-    });
-    expect(spy).not.toHaveBeenCalled();
-  });
-
   describe('onChange()', () => {
     it('is called with the updated checked value of the input on click', () => {
       const spy = jest.fn();
@@ -52,55 +38,23 @@ describe('<Checkbox />', () => {
       );
 
       (element.find('input')!.domNode as HTMLInputElement).checked = true;
-      element.find(Choice)?.trigger('onClick');
+      const event = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+      });
+      element.find('input')!.domNode?.dispatchEvent(event);
 
       expect(spy).toHaveBeenCalledWith(false, 'MyCheckbox');
-    });
-
-    it('is called when space is pressed', () => {
-      const spy = jest.fn();
-      const element = mountWithApp(
-        <Checkbox id="MyCheckbox" label="Checkbox" onChange={spy} />,
-      );
-
-      element.find('input')!.trigger('onKeyUp', {
-        keyCode: Key.Space,
-      });
-
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-
-    it('is not from keys other than space', () => {
-      const spy = jest.fn();
-      const element = mountWithApp(
-        <Checkbox id="MyCheckbox" label="Checkbox" onChange={spy} />,
-      );
-
-      element.find('input')!.trigger('onKeyUp', {
-        keyCode: Key.Enter,
-      });
-
-      expect(spy).not.toHaveBeenCalled();
     });
 
     it('sets focus on the input when checkbox is toggled off', () => {
       const checkbox = mountWithApp(
         <Checkbox checked id="checkboxId" label="Checkbox" onChange={noop} />,
       );
-      checkbox.find(Choice)!.trigger('onClick');
+      checkbox.find('input')!.trigger('onClick');
 
       expect(document.activeElement).toBe(checkbox.find('input')!.domNode);
-    });
-
-    it('is not called from keyboard events when disabled', () => {
-      const spy = jest.fn();
-      const checkbox = mountWithApp(
-        <Checkbox label="label" disabled onChange={spy} />,
-      );
-      checkbox.find('input')!.trigger('onKeyUp', {
-        keyCode: Key.Enter,
-      });
-      expect(spy).not.toHaveBeenCalled();
     });
 
     it('is not called from click events when disabled', () => {
@@ -173,22 +127,6 @@ describe('<Checkbox />', () => {
 
       expect(element).toContainReactComponent('input', {
         disabled: false,
-      });
-    });
-
-    it('can change values when disabled', () => {
-      const spy = jest.fn();
-      const checkbox = mountWithApp(
-        <Checkbox label="label" disabled onChange={spy} />,
-      );
-
-      checkbox.find('input')!.trigger('onKeyUp', {
-        keyCode: Key.Enter,
-      });
-      checkbox.setProps({checked: true});
-
-      expect(checkbox).toContainReactComponent('input', {
-        checked: true,
       });
     });
   });
@@ -342,9 +280,7 @@ describe('<Checkbox />', () => {
     it('on keyUp adds a keyFocused class to the input', () => {
       const checkbox = mountWithApp(<Checkbox label="Checkbox" />);
 
-      checkbox.find('input')!.trigger('onKeyUp', {
-        keyCode: Key.Space,
-      });
+      checkbox.find('input')!.trigger('onFocus');
 
       expect(checkbox).toContainReactComponent('input', {
         className: 'Input keyFocused',
