@@ -31,5 +31,6 @@ Use [the changelog guidelines](/documentation/Versioning%20and%20changelog.md) t
 - Cleaned up Button styling and $button-filled mixin([#4635](https://github.com/Shopify/polaris-react/pull/4635))
 - Removed miscellaneous css custom properties ([#4620](https://github.com/Shopify/polaris-react/pull/4620))
 - Removed custom and unnecessary font weight properties ([#4648](https://github.com/Shopify/polaris-react/pull/4648))
+- Remove remaining color sass function uses ([#4655](https://github.com/Shopify/polaris-react/pull/4655))
 
 ### Deprecations
