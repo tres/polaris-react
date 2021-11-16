@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "アクション"
+        "rollupButton": "アクションを表示する"
+      },
+      "Actions": {
+        "moreActions": "その他の操作"
       }
     },
     "Filters": {
@@ -303,9 +306,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "その他の操作"
     },
     "Loading": {
       "label": "ページの読み込み表示バー"

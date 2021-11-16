@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "Acciones"
+        "rollupButton": "Ver acciones"
+      },
+      "Actions": {
+        "moreActions": "Más acciones"
       }
     },
     "Filters": {
@@ -303,9 +306,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "Más acciones"
     },
     "Loading": {
       "label": "Barra de \"cargando página\""

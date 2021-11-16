@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "動作"
+        "rollupButton": "檢視動作"
+      },
+      "Actions": {
+        "moreActions": "更多動作"
       }
     },
     "Filters": {
@@ -303,9 +306,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "更多動作"
     },
     "Loading": {
       "label": "頁面載入進度條"

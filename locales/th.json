@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "การดำเนินการ"
+        "rollupButton": "ดูการดำเนินการ"
+      },
+      "Actions": {
+        "moreActions": "การดำเนินการเพิ่มเติม"
       }
     },
     "Filters": {
@@ -303,9 +306,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "การดำเนินการเพิ่มเติม"
     },
     "Loading": {
       "label": "แถบแสดงการโหลดหน้า"

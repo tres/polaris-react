@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "编辑"
+        "rollupButton": "查看操作"
+      },
+      "Actions": {
+        "moreActions": "更多操作"
       }
     },
     "Filters": {
@@ -300,9 +303,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "其他操作"
     },
     "Loading": {
       "label": "页面加载条"

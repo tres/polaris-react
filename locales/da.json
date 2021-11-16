@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "Handlinger"
+        "rollupButton": "Se handlinger"
+      },
+      "Actions": {
+        "moreActions": "Flere handlinger"
       }
     },
     "Filters": {
@@ -300,9 +303,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "Flere handlinger"
     },
     "Loading": {
       "label": "Statuslinje for sideindlæsning"

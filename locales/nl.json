@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "Acties"
+        "rollupButton": "Acties bekijken"
+      },
+      "Actions": {
+        "moreActions": "Meer acties"
       }
     },
     "Filters": {
@@ -303,9 +306,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "Meer acties"
     },
     "Loading": {
       "label": "Pagina laadbalk"

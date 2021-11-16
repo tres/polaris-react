@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "Akce"
+        "rollupButton": "Zobrazit akce"
+      },
+      "Actions": {
+        "moreActions": "Další akce"
       }
     },
     "Filters": {
@@ -305,9 +308,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "Další akce"
     },
     "Loading": {
       "label": "Panel načítání stránky"
