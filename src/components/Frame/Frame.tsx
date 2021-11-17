@@ -27,7 +27,22 @@ import {
 } from './components';
 import styles from './Frame.scss';
 
+export interface ThemeLogo {
+  /** Provides a path for a logo used on a dark background */
+  topBarSource?: string;
+  /** Provides a path for a logo used on a light background */
+  contextualSaveBarSource?: string;
+  /** Destination the merchant will navigate to when clicking the logo */
+  url?: string;
+  /** Accessible label the logo image */
+  accessibilityLabel?: string;
+  /** Number of pixels wide the logo image is */
+  width?: number;
+}
+
 export interface FrameProps {
+  /** Sets the logo for the top bar and contextual save bar components*/
+  logo?: ThemeLogo;
   /** The content to display inside the frame. */
   children?: React.ReactNode;
   /** Accepts a top bar component that will be rendered at the top-most portion of an application frame */
