@@ -4,6 +4,7 @@ import {classNames} from '../../../../utilities/css';
 import {buttonsFrom} from '../../../Button';
 import {TextStyle} from '../../../TextStyle';
 import {useMediaQuery} from '../../../../utilities/media-query';
+import {useI18n} from '../../../../utilities/i18n';
 import {
   ConditionalRender,
   ConditionalWrapper,
@@ -47,8 +48,6 @@ export interface HeaderProps extends TitleProps {
   secondaryActions?: MenuActionDescriptor[];
   /** Collection of page-level groups of secondary actions */
   actionGroups?: MenuGroupDescriptor[];
-  /** Override label for rolled up actions activator */
-  rollupActionsLabelOverride?: string;
   /** Additional navigation markup */
   additionalNavigation?: React.ReactNode;
   // Additional meta data
@@ -79,8 +78,8 @@ export function Header({
   secondaryActions = [],
   actionGroups = [],
   compactTitle = false,
-  rollupActionsLabelOverride,
 }: HeaderProps) {
+  const i18n = useI18n();
   const {isNavigationCollapsed} = useMediaQuery();
   const isSingleRow =
     !primaryAction &&
@@ -139,7 +138,11 @@ export function Header({
         actions={secondaryActions}
         groups={actionGroups}
         rollup={isNavigationCollapsed}
-        rollupActionsLabelOverride={rollupActionsLabelOverride}
+        rollupActionsLabel={
+          title
+            ? i18n.translate('Polaris.Page.Header.rollupActionsLabel', {title})
+            : undefined
+        }
       />
     ) : null;
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {HorizontalDotsMinor} from '@shopify/polaris-icons';
 import {mountWithApp} from 'tests/utilities';
-import {Button, Popover, Tooltip} from 'components';
+import {Button, Popover} from 'components';
 
 // eslint-disable-next-line @shopify/strict-component-boundaries
 import {
@@ -12,7 +12,7 @@ import {RollupActions} from '../RollupActions';
 
 describe('<RollupActions />', () => {
   const mockProps = {
-    accessibilityLabelOverride: undefined,
+    accessibilityLabel: undefined,
     items: undefined,
     sections: undefined,
   };
@@ -34,16 +34,6 @@ describe('<RollupActions />', () => {
         url: 'https://www.shopify.ca',
       },
     ];
-
-    it('renders a Tooltip with the default accessibility label', () => {
-      const wrapper = mountWithApp(
-        <RollupActions {...mockProps} items={mockItems} />,
-      );
-
-      expect(wrapper).toContainReactComponent(Tooltip, {
-        content: 'View actions',
-      });
-    });
 
     it('renders a Button with the default accessibility label', () => {
       const wrapper = mountWithApp(
@@ -86,34 +76,19 @@ describe('<RollupActions />', () => {
       });
     });
 
-    describe('accessibilityLabelOverride', () => {
-      it('renders a Tooltip with the accessibilityLabelOverride', () => {
-        const accessibilityLabelOverride = 'View test actions';
+    describe('accessibilityLabel', () => {
+      it('renders a Button with the accessibilityLabel', () => {
+        const accessibilityLabel = 'View test actions';
         const wrapper = mountWithApp(
           <RollupActions
             {...mockProps}
             items={mockItems}
-            accessibilityLabelOverride={accessibilityLabelOverride}
-          />,
-        );
-
-        expect(wrapper).toContainReactComponent(Tooltip, {
-          content: accessibilityLabelOverride,
-        });
-      });
-
-      it('renders a Button with the accessibilityLabelOverride', () => {
-        const accessibilityLabelOverride = 'View test actions';
-        const wrapper = mountWithApp(
-          <RollupActions
-            {...mockProps}
-            items={mockItems}
-            accessibilityLabelOverride={accessibilityLabelOverride}
+            accessibilityLabel={accessibilityLabel}
           />,
         );
 
         expect(wrapper).toContainReactComponent(Button, {
-          accessibilityLabel: accessibilityLabelOverride,
+          accessibilityLabel,
         });
       });
     });

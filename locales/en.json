@@ -175,6 +175,11 @@
       "iFrameTitle": "body markup",
       "modalWarning": "These required properties are missing from Modal: {missingProps}"
     },
+    "Page": {
+      "Header": {
+        "rollupActionsLabel": "View actions for {title}"
+      }
+    },
     "Pagination": {
       "previous": "Previous",
       "next": "Next",
