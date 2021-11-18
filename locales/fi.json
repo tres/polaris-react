@@ -129,7 +129,10 @@
     },
     "ActionMenu": {
       "RollupActions": {
-        "rollupButton": "Toiminnat"
+        "rollupButton": "Näytä toiminnot"
+      },
+      "Actions": {
+        "moreActions": "Lisää toimintoja"
       }
     },
     "Filters": {
@@ -303,9 +306,6 @@
           }
         }
       }
-    },
-    "Actions": {
-      "moreActions": "Lisää toimintoja"
     },
     "Loading": {
       "label": "Sivun latautumisen palkki"
