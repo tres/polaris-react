@@ -30,15 +30,18 @@ export const Checkbox = memo(function Checkbox() {
 
   const Wrapper = condensed ? Fragment : CheckboxWrapper;
 
+  const handleOnChange = (
+    _newChecked: boolean,
+    _id: string,
+    event: React.KeyboardEvent | React.MouseEvent<Element, MouseEvent>,
+  ) => {
+    onInteraction && onInteraction(event);
+  };
+
   return (
     <Wrapper>
       <div className={styles.TableCellContentContainer}>
-        <div
-          className={wrapperClassName}
-          onClick={onInteraction}
-          onKeyUp={onInteraction}
-          onChange={stopPropagation}
-        >
+        <div className={wrapperClassName}>
           <PolarisCheckbox
             id={itemId}
             label={i18n.translate('Polaris.IndexTable.selectItem', {
@@ -46,6 +49,7 @@ export const Checkbox = memo(function Checkbox() {
             })}
             labelHidden
             checked={selected}
+            onChange={handleOnChange}
           />
         </div>
       </div>
@@ -90,10 +94,4 @@ export function CheckboxWrapper({children}: CheckboxWrapperProps) {
       {children}
     </td>
   );
-}
-
-function stopPropagation(
-  event: React.MouseEvent | React.KeyboardEvent | React.FormEvent,
-) {
-  event.stopPropagation();
 }

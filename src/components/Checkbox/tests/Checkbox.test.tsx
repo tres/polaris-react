@@ -1,6 +1,7 @@
 import React, {AllHTMLAttributes} from 'react';
 import {mountWithApp} from 'tests/utilities';
 
+import {Key} from '../../../types';
 import {Checkbox} from '../Checkbox';
 
 describe('<Checkbox />', () => {
@@ -45,7 +46,11 @@ describe('<Checkbox />', () => {
       });
       element.find('input')!.domNode?.dispatchEvent(event);
 
-      expect(spy).toHaveBeenCalledWith(false, 'MyCheckbox');
+      expect(spy).toHaveBeenCalledWith(
+        false,
+        'MyCheckbox',
+        expect.objectContaining({target: element.find('input')!.domNode}),
+      );
     });
 
     it('sets focus on the input when checkbox is toggled off', () => {
@@ -280,7 +285,9 @@ describe('<Checkbox />', () => {
     it('on keyUp adds a keyFocused class to the input', () => {
       const checkbox = mountWithApp(<Checkbox label="Checkbox" />);
 
-      checkbox.find('input')!.trigger('onFocus');
+      checkbox.find('input')!.trigger('onKeyUp', {
+        keyCode: Key.Space,
+      });
 
       expect(checkbox).toContainReactComponent('input', {
         className: 'Input keyFocused',

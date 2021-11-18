@@ -13,7 +13,7 @@ import {useUniqueId} from '../../utilities/unique-id';
 import {Choice, helpTextID} from '../Choice';
 import {errorTextID} from '../InlineError';
 import {Icon} from '../Icon';
-import type {Error, CheckboxHandles} from '../../types';
+import {Error, CheckboxHandles, Key} from '../../types';
 import {WithinListboxContext} from '../../utilities/listbox/context';
 
 import styles from './Checkbox.scss';
@@ -42,7 +42,11 @@ export interface CheckboxProps {
   /** Display an error message */
   error?: Error | boolean;
   /** Callback when checkbox is toggled */
-  onChange?(newChecked: boolean, id: string): void;
+  onChange?(
+    newChecked: boolean,
+    id: string,
+    event?: React.KeyboardEvent | React.MouseEvent<Element, MouseEvent>,
+  ): void;
   /** Callback when checkbox is focussed */
   onFocus?(): void;
   /** Callback when focus is removed */
@@ -92,16 +96,20 @@ export const Checkbox = forwardRef<CheckboxHandles, CheckboxProps>(
       setKeyFocused(false);
     };
 
-    const handleOnFocus = () => {
-      onFocus?.();
-      setKeyFocused(true);
+    const handleKeyUp = (event: React.KeyboardEvent) => {
+      const {keyCode} = event;
+
+      if (keyCode === Key.Space || keyCode === Key.Tab) {
+        !keyFocused && setKeyFocused(true);
+      }
     };
 
-    const handleOnClick = () => {
+    const handleOnClick = (event: React.MouseEvent) => {
       if (onChange == null || inputNode.current == null || disabled) {
         return;
       }
-      onChange(inputNode.current.checked, id);
+
+      onChange(inputNode.current.checked, id, event);
       inputNode.current.focus();
     };
 
@@ -165,7 +173,8 @@ export const Checkbox = forwardRef<CheckboxHandles, CheckboxProps>(
             onBlur={handleBlur}
             onChange={noop}
             onClick={handleOnClick}
-            onFocus={handleOnFocus}
+            onFocus={onFocus}
+            onKeyUp={handleKeyUp}
             aria-invalid={error != null}
             aria-controls={ariaControls}
             aria-describedby={ariaDescribedBy}
