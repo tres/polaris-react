@@ -46,6 +46,7 @@ export function Collapsible({
     styles.Collapsible,
     isFullyClosed && styles.isFullyClosed,
     expandOnPrint && styles.expandOnPrint,
+    open && styles.open,
   );
 
   const collapsibleStyles = {
